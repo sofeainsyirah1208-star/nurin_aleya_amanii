@@ -1,0 +1,682 @@
+/* =========================================================
+   BIRTHDAY CARD - style.css
+   ========================================================= */
+
+   :root{
+    --pink:#ff8fc7;
+    --pink-deep:#d63384;
+    --pink-dark:#a61e4d;
+    --blush:#ffd6e8;
+    --cream:#fffaf0;
+    --plum:#8e44ad;
+    --choc:#573612;
+    --font-script:'Dancing Script','Brush Script MT',cursive;
+    --font-body:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:#5a2a44;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 15% 10%,#fff0f7 0,transparent 45%),
+      radial-gradient(circle at 88% 92%,#ffc2de 0,transparent 50%),
+      linear-gradient(160deg,#ffd6e8,#fff5fa 55%,#ffdcec);
+    background-attachment:fixed;
+  }
+  
+  /* ---------- Skrin asas ---------- */
+  .screen{
+    position:fixed;
+    inset:0;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:10;
+  }
+  .screen.active{
+    display:flex;
+    animation:screenIn .7s ease both;
+  }
+  @keyframes screenIn{
+    from{opacity:0}
+    to{opacity:1}
+  }
+  
+  /* ---------- Latar: hati terapung ---------- */
+  .bg-hearts{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .bg-hearts span{
+    position:absolute;
+    bottom:-50px;
+    opacity:0;
+    animation:rise linear forwards;
+    will-change:transform,opacity;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) rotate(0);opacity:0}
+    10%{opacity:.85}
+    100%{transform:translateY(-115vh) rotate(28deg);opacity:0}
+  }
+  
+  /* Canvas confetti */
+  #fx{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:40;
+  }
+  
+  /* ---------- Butang ---------- */
+  .btn{
+    font-family:var(--font-body);
+    font-weight:500;
+    font-size:18px;
+    letter-spacing:.5px;
+    padding:14px 36px;
+    border:none;
+    border-radius:40px;
+    color:#fff;
+    cursor:pointer;
+    background:linear-gradient(135deg,#ff8fc7,#ff5fa8);
+    box-shadow:0 8px 22px rgba(255,95,168,.45);
+    transition:transform .2s ease,box-shadow .2s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 12px 28px rgba(255,95,168,.55)}
+  .btn:active{transform:scale(.97)}
+  .btn:disabled{opacity:.65;cursor:default;transform:none}
+  .btn.pulse{animation:pulse 1.8s ease-in-out infinite}
+  .btn.ghost{
+    background:rgba(255,255,255,.75);
+    color:var(--pink-deep);
+    font-size:16px;
+    padding:12px 28px;
+    box-shadow:0 6px 18px rgba(214,51,132,.2);
+  }
+  @keyframes pulse{
+    0%,100%{box-shadow:0 8px 22px rgba(255,95,168,.45)}
+    50%{box-shadow:0 8px 34px rgba(255,95,168,.85)}
+  }
+  
+  /* =========================================================
+     SKRIN 1: SAMPUL SURAT
+     ========================================================= */
+  .start-screen h1{
+    font-family:var(--font-script);
+    font-size:clamp(32px,7vw,56px);
+    color:var(--pink-deep);
+    margin:0 0 6px;
+    text-align:center;
+    padding:0 16px;
+    text-shadow:0 4px 14px rgba(214,51,132,.25);
+    animation:bounce 1.8s ease-in-out infinite;
+  }
+  .start-screen .sub{
+    margin:0 0 26px;
+    font-size:14px;
+    opacity:.75;
+  }
+  @keyframes bounce{
+    50%{transform:translateY(-12px)}
+  }
+  
+  .envelope{
+    position:relative;
+    width:240px;
+    height:160px;
+    margin-bottom:38px;
+    cursor:pointer;
+    perspective:900px;
+    outline:none;
+    animation:floaty 3.4s ease-in-out infinite;
+  }
+  .envelope > div{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+  }
+  @keyframes floaty{
+    50%{transform:translateY(-10px)}
+  }
+  
+  .env-back{
+    background:#ff9fcf;
+    border-radius:10px;
+    z-index:1;
+    box-shadow:0 20px 34px rgba(214,51,132,.28);
+  }
+  .env-letter{
+    left:5% !important;
+    top:8% !important;
+    width:90% !important;
+    height:84% !important;
+    background:
+      repeating-linear-gradient(transparent 0 14px,rgba(214,51,132,.16) 14px 15px),
+      var(--cream);
+    border-radius:6px;
+    z-index:2;
+    transition:transform 1s cubic-bezier(.3,1.2,.4,1) .45s;
+  }
+  .env-front{
+    background:linear-gradient(160deg,#ff7ab8,#ff94c6);
+    clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);
+    border-radius:10px;
+    z-index:3;
+  }
+  .env-flap{
+    height:58% !important;
+    background:linear-gradient(#ff4f9d,#ff6db2);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top center;
+    z-index:4;
+    transition:transform .7s ease,z-index 0s .35s;
+  }
+  .env-heart{
+    left:50% !important;
+    top:34% !important;
+    width:auto !important;
+    height:auto !important;
+    transform:translate(-50%,-50%);
+    font-size:34px;
+    z-index:5;
+    transition:opacity .3s ease,transform .3s ease;
+    animation:beat 1.2s ease-in-out infinite;
+  }
+  @keyframes beat{
+    0%,100%{transform:translate(-50%,-50%) scale(1)}
+    50%{transform:translate(-50%,-50%) scale(1.18)}
+  }
+  
+  .envelope.open{animation:none}
+  .envelope.open .env-flap{transform:rotateX(180deg);z-index:0}
+  .envelope.open .env-letter{transform:translateY(-62%)}
+  .envelope.open .env-heart{opacity:0;animation:none}
+  
+  /* =========================================================
+     SKRIN 2: SURAT
+     ========================================================= */
+  .letter{perspective:1400px}
+  
+  .paper-wrap{
+    position:relative;
+    width:min(580px,92vw);
+    animation:openPaper 1.2s ease both;
+    transform-origin:top center;
+  }
+  .paper-wrap::before{
+    content:"";
+    position:absolute;
+    top:-12px;
+    left:50%;
+    width:120px;
+    height:26px;
+    transform:translateX(-50%) rotate(-2deg);
+    background:rgba(255,143,199,.7);
+    border-radius:3px;
+    box-shadow:0 2px 6px rgba(0,0,0,.1);
+    z-index:2;
+    pointer-events:none;
+  }
+  
+  .paper{
+    max-height:82vh;
+    overflow-y:auto;
+    padding:32px 38px 36px;
+    background-color:var(--cream);
+    background-image:repeating-linear-gradient(
+      transparent 0,transparent 31px,
+      rgba(214,51,132,.13) 31px,rgba(214,51,132,.13) 32px);
+    background-attachment:local;
+    border-radius:16px;
+    box-shadow:
+      0 22px 50px rgba(166,30,77,.25),
+      0 0 0 6px rgba(255,255,255,.6);
+    scrollbar-width:thin;
+    scrollbar-color:var(--pink) transparent;
+  }
+  
+  .paper h2{
+    font-family:var(--font-script);
+    font-size:26px;
+    line-height:32px;
+    color:var(--pink-deep);
+    margin:0 0 32px;
+  }
+  .paper p{
+    font-size:15px;
+    line-height:32px;
+    margin:0 0 32px;
+    color:#6b3a52;
+  }
+  .paper .actions{
+    text-align:center;
+    margin-top:8px;
+  }
+  
+  .reveal{
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeUp .9s ease forwards;
+    animation-delay:calc(1s + var(--i,0) * 1.3s);
+  }
+  @keyframes fadeUp{
+    to{opacity:1;transform:none}
+  }
+  @keyframes openPaper{
+    from{transform:rotateX(-90deg);opacity:0}
+    to{transform:rotateX(0);opacity:1}
+  }
+  
+  /* =========================================================
+     SKRIN 3: HARI JADI
+     ========================================================= */
+  .birthday{
+    justify-content:flex-start;
+    overflow-y:auto;
+  }
+  .birthday-inner{
+    margin:auto;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    padding:60px 12px 110px;
+  }
+  
+  /* Bunting */
+  .bunting{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:46px;
+    display:flex;
+    justify-content:space-evenly;
+    align-items:flex-start;
+    pointer-events:none;
+    z-index:3;
+  }
+  .bunting::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:2px;
+    background:var(--pink-deep);
+    opacity:.45;
+  }
+  .bunting i{
+    display:block;
+    width:34px;
+    height:42px;
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    transform-origin:top center;
+    animation:sway 3s ease-in-out infinite alternate;
+    animation-delay:var(--d,0s);
+  }
+  .bunting i:nth-child(4n+1){background:#ff8fc7}
+  .bunting i:nth-child(4n+2){background:#ffd6e8}
+  .bunting i:nth-child(4n+3){background:#c77dff}
+  .bunting i:nth-child(4n+4){background:#ffe08a}
+  @keyframes sway{
+    from{transform:rotate(-7deg)}
+    to{transform:rotate(7deg)}
+  }
+  
+  /* Tajuk */
+  .title{
+    font-family:var(--font-script);
+    font-weight:700;
+    font-size:clamp(20px,4.6vw,36px);
+    line-height:1.4;
+    text-align:center;
+    max-width:94vw;
+    background:linear-gradient(90deg,#d63384,#ff8fc7,#8e44ad,#d63384);
+    background-size:300% 100%;
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:var(--pink-deep);
+    -webkit-text-fill-color:transparent;
+    animation:shimmer 6s linear infinite;
+  }
+  @keyframes shimmer{
+    to{background-position:300% 0}
+  }
+  
+  /* Kek */
+  .cake-stage{
+    display:flex;
+    justify-content:center;
+  }
+  .cake-wrap{
+    position:relative;
+    width:300px;
+    height:290px;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    outline:none;
+    animation:pop .9s cubic-bezier(.2,1.4,.4,1) both;
+  }
+  @keyframes pop{
+    from{transform:scale(.3) translateY(60px);opacity:0}
+    to{transform:none;opacity:1}
+  }
+  .cake-wrap::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-20px;
+    width:260px;
+    height:260px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle,rgba(255,220,120,.55),transparent 65%);
+    pointer-events:none;
+    transition:opacity .6s ease;
+    animation:glow 1.4s ease-in-out infinite alternate;
+  }
+  @keyframes glow{
+    from{opacity:.7}
+    to{opacity:1}
+  }
+  
+  .plate{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:334px;
+    height:28px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:linear-gradient(#f6f7f8,#a9b1b8);
+    box-shadow:0 16px 20px rgba(80,30,60,.28);
+  }
+  
+  .tier{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    border-radius:22px 22px 8px 8px;
+    background-color:#fad7a0;
+    background-image:
+      radial-gradient(circle,#ff8fc7 2px,transparent 2.6px),
+      radial-gradient(circle,#fff 2px,transparent 2.6px);
+    background-size:34px 26px,46px 30px;
+    background-position:0 0,14px 10px;
+    box-shadow:inset 0 -10px 14px rgba(147,81,22,.18);
+  }
+  .tier.bottom{width:270px;height:96px;bottom:14px}
+  .tier.top{width:180px;height:72px;bottom:104px}
+  
+  .tier::before{ /* topi coklat */
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:28px;
+    background:var(--choc);
+    border-radius:22px 22px 0 0;
+    box-shadow:inset 0 8px rgba(255,255,255,.08);
+  }
+  .tier::after{ /* inti krim */
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    top:60%;
+    height:9px;
+    background:#935116;
+  }
+  .drip{
+    position:absolute;
+    left:0;
+    right:0;
+    top:22px;
+    height:24px;
+    background:
+      radial-gradient(ellipse 12px 22px at 50% 0,var(--choc) 96%,transparent 100%) 0 0/46px 100% repeat-x,
+      radial-gradient(ellipse 9px 14px at 50% 0,var(--choc) 96%,transparent 100%) 23px 0/46px 100% repeat-x;
+  }
+  .cake-heart{
+    position:absolute;
+    bottom:8px;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:18px;
+  }
+  
+  /* Lilin */
+  .candles{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:174px;
+    display:flex;
+    justify-content:space-around;
+    padding:0 72px;
+  }
+  .candle{
+    position:relative;
+    width:11px;
+    height:46px;
+    border-radius:3px 3px 0 0;
+    background:repeating-linear-gradient(-45deg,#fff 0 6px,#ff8fc7 6px 12px);
+    box-shadow:0 0 0 1px rgba(0,0,0,.05);
+  }
+  .candle::before{ /* sumbu */
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-8px;
+    width:2px;
+    height:9px;
+    margin-left:-1px;
+    background:#333;
+  }
+  .candle::after{ /* asap */
+    content:"";
+    position:absolute;
+    left:50%;
+    top:-14px;
+    width:9px;
+    height:9px;
+    margin-left:-4px;
+    border-radius:50%;
+    background:rgba(150,150,150,.55);
+    opacity:0;
+  }
+  .flame{
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 6px);
+    width:14px;
+    height:26px;
+    margin-left:-7px;
+    border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+    background:radial-gradient(circle at 50% 72%,#fff7b0 0,#ffd23f 40%,#ff8a1f 78%);
+    box-shadow:0 0 14px 4px rgba(255,200,80,.7);
+    transform:scale(1);
+    transform-origin:50% 100%;
+    animation:flicker .5s ease-in-out infinite alternate;
+  }
+  .candle:nth-child(2) .flame{animation-delay:.15s}
+  .candle:nth-child(3) .flame{animation-delay:.3s}
+  @keyframes flicker{
+    from{transform:scale(1,1) rotate(-2deg)}
+    to{transform:scale(1.12,.92) rotate(2deg)}
+  }
+  
+  /* Lilin ditiup */
+  .cake-wrap.out::before{opacity:0;animation:none}
+  .cake-wrap.out .flame{
+    animation:none;
+    opacity:0;
+    transform:scale(0);
+    transition:opacity .35s ease,transform .35s ease;
+  }
+  .cake-wrap.out .candle::after{animation:smoke 1.8s ease-out forwards}
+  @keyframes smoke{
+    0%{opacity:.6;transform:translateY(0) scale(.6)}
+    100%{opacity:0;transform:translateY(-46px) scale(2.4)}
+  }
+  
+  /* Ucapan selepas tiup */
+  .wish{
+    min-height:34px;
+    font-family:var(--font-script);
+    font-size:26px;
+    font-weight:700;
+    color:var(--pink-deep);
+    text-align:center;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .6s ease,transform .6s ease;
+  }
+  .wish.show{opacity:1;transform:none}
+  
+  /* Quote */
+  .quote{
+    max-width:min(520px,92vw);
+    padding:16px 24px;
+    border-radius:18px;
+    background:rgba(255,255,255,.55);
+    -webkit-backdrop-filter:blur(6px);
+    backdrop-filter:blur(6px);
+    box-shadow:0 10px 30px rgba(214,51,132,.15);
+    font-family:var(--font-script);
+    font-size:clamp(18px,3.4vw,22px);
+    line-height:1.5;
+    color:var(--pink-dark);
+    text-align:center;
+    animation:fadeUp 1s ease .8s both;
+  }
+  
+  /* Butang ke bouquet: tetap di bawah tengah skrin */
+  #bouquetBtn{display:none}
+  #bouquetBtn.show{
+    display:block;
+    position:fixed;
+    left:50%;
+    bottom:22px;
+    transform:translateX(-50%);
+    z-index:25;
+    animation:fadeUpBtn .8s ease both;
+  }
+  #bouquetBtn.show:hover{transform:translateX(-50%) scale(1.04)}
+  #bouquetBtn.show:active{transform:translateX(-50%) scale(.97)}
+  @keyframes fadeUpBtn{
+    from{opacity:0;transform:translate(-50%,12px)}
+    to{opacity:1;transform:translate(-50%,0)}
+  }
+  
+  /* ASCII art (hanya skrin lebar) */
+  .art{
+    display:none;
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    pointer-events:none;
+    color:var(--plum);
+    opacity:.8;
+    z-index:1;
+  }
+  .art pre{
+    margin:0;
+    white-space:pre;
+    line-height:1;
+    font-family:'DejaVu Sans Mono','Segoe UI Symbol','Apple Braille',monospace;
+  }
+  .art-left{left:1.5vw}
+  .art-left pre{font-size:min(10px,.72vw)}
+  .art-right{right:1.5vw;text-align:center}
+  .art-right pre{font-size:min(8px,.58vw)}
+  .art .date{
+    margin:8px 0 0;
+    font-family:var(--font-script);
+    font-size:22px;
+    color:var(--pink-deep);
+  }
+  @media (min-width:1000px){
+    .art{display:block}
+  }
+  
+  /* =========================================================
+     SKRIN 4: BOUQUET
+     ========================================================= */
+  .bouquet-screen{
+    background:radial-gradient(ellipse at 50% 30%,#1a1030 0%,#07050f 70%);
+    z-index:20;
+  }
+  #stage{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  #replay{
+    position:fixed;
+    left:14px;
+    bottom:14px;
+    font:12px "Courier New",monospace;
+    color:#ffb3d1;
+    background:transparent;
+    border:1px solid #ffb3d155;
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+    opacity:.55;
+    transition:opacity .2s,background .2s;
+    z-index:5;
+  }
+  #replay:hover{opacity:1;background:#ffb3d122}
+  
+  /* Butang muzik */
+  .music-btn{
+    position:fixed;
+    right:16px;
+    bottom:16px;
+    width:46px;
+    height:46px;
+    border:none;
+    border-radius:50%;
+    display:none;
+    place-items:center;
+    font-size:20px;
+    cursor:pointer;
+    background:rgba(255,255,255,.85);
+    box-shadow:0 6px 16px rgba(214,51,132,.3);
+    z-index:30;
+  }
+  .music-btn.show{display:grid}
+  
+  /* ---------- Responsif ---------- */
+  @media (max-width:480px){
+    .paper{padding:28px 22px 30px}
+    .paper h2{font-size:22px}
+    .envelope{width:210px;height:140px}
+  }
+  @media (max-width:480px),(max-height:700px){
+    .cake-stage{transform:scale(.86);margin:-20px 0}
+  }
+  
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms !important;animation-iteration-count:1 !important}
+  }
