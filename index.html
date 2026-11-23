@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise 💗</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --pink:#ff8fc7;
+  --pink-deep:#d63384;
+  --pink-dark:#a61e4d;
+  --blush:#ffd6e8;
+  --cream:#fffaf0;
+  --plum:#8e44ad;
+  --choc:#573612;
+  --font-script:'Dancing Script','Brush Script MT',cursive;
+  --font-body:'Poppins',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:#5a2a44;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 10%,#fff0f7 0,transparent 45%),
+    radial-gradient(circle at 88% 92%,#ffc2de 0,transparent 50%),
+    linear-gradient(160deg,#ffd6e8,#fff5fa 55%,#ffdcec);
+  background-attachment:fixed;
+}
+
+/* ---------- Skrin asas ---------- */
+.screen{
+  position:fixed;
+  inset:0;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:10;
+}
+.screen.active{
+  display:flex;
+  animation:screenIn .7s ease both;
+}
+@keyframes screenIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+/* ---------- Latar: hati terapung ---------- */
+.bg-hearts{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+.bg-hearts span{
+  position:absolute;
+  bottom:-50px;
+  opacity:0;
+  animation:rise linear forwards;
+  will-change:transform,opacity;
+}
+@keyframes rise{
+  0%{transform:translateY(0) rotate(0);opacity:0}
+  10%{opacity:.85}
+  100%{transform:translateY(-115vh) rotate(28deg);opacity:0}
+}
+
+/* Canvas confetti */
+#fx{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:40;
+}
+
+/* ---------- Butang ---------- */
+.btn{
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:18px;
+  letter-spacing:.5px;
+  padding:14px 36px;
+  border:none;
+  border-radius:40px;
+  color:#fff;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff8fc7,#ff5fa8);
+  box-shadow:0 8px 22px rgba(255,95,168,.45);
+  transition:transform .2s ease,box-shadow .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 12px 28px rgba(255,95,168,.55)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.65;cursor:default;transform:none}
+.btn.pulse{animation:pulse 1.8s ease-in-out infinite}
+.btn.ghost{
+  background:rgba(255,255,255,.75);
+  color:var(--pink-deep);
+  font-size:16px;
+  padding:12px 28px;
+  box-shadow:0 6px 18px rgba(214,51,132,.2);
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 8px 22px rgba(255,95,168,.45)}
+  50%{box-shadow:0 8px 34px rgba(255,95,168,.85)}
+}
+
+/* =========================================================
+   SKRIN 1: SAMPUL SURAT
+   ========================================================= */
+.start-screen h1{
+  font-family:var(--font-script);
+  font-size:clamp(32px,7vw,56px);
+  color:var(--pink-deep);
+  margin:0 0 6px;
+  text-align:center;
+  padding:0 16px;
+  text-shadow:0 4px 14px rgba(214,51,132,.25);
+  animation:bounce 1.8s ease-in-out infinite;
+}
+.start-screen .sub{
+  margin:0 0 26px;
+  font-size:14px;
+  opacity:.75;
+}
+@keyframes bounce{
+  50%{transform:translateY(-12px)}
+}
+
+.envelope{
+  position:relative;
+  width:240px;
+  height:160px;
+  margin-bottom:38px;
+  cursor:pointer;
+  perspective:900px;
+  outline:none;
+  animation:floaty 3.4s ease-in-out infinite;
+}
+.envelope > div{
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+}
+@keyframes floaty{
+  50%{transform:translateY(-10px)}
+}
+
+.env-back{
+  background:#ff9fcf;
+  border-radius:10px;
+  z-index:1;
+  box-shadow:0 20px 34px rgba(214,51,132,.28);
+}
+.env-letter{
+  left:5% !important;
+  top:8% !important;
+  width:90% !important;
+  height:84% !important;
+  background:
+    repeating-linear-gradient(transparent 0 14px,rgba(214,51,132,.16) 14px 15px),
+    var(--cream);
+  border-radius:6px;
+  z-index:2;
+  transition:transform 1s cubic-bezier(.3,1.2,.4,1) .45s;
+}
+.env-front{
+  background:linear-gradient(160deg,#ff7ab8,#ff94c6);
+  clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%);
+  border-radius:10px;
+  z-index:3;
+}
+.env-flap{
+  height:58% !important;
+  background:linear-gradient(#ff4f9d,#ff6db2);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top center;
+  z-index:4;
+  transition:transform .7s ease,z-index 0s .35s;
+}
+.env-heart{
+  left:50% !important;
+  top:34% !important;
+  width:auto !important;
+  height:auto !important;
+  transform:translate(-50%,-50%);
+  font-size:34px;
+  z-index:5;
+  transition:opacity .3s ease,transform .3s ease;
+  animation:beat 1.2s ease-in-out infinite;
+}
+@keyframes beat{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.18)}
+}
+
+.envelope.open{animation:none}
+.envelope.open .env-flap{transform:rotateX(180deg);z-index:0}
+.envelope.open .env-letter{transform:translateY(-62%)}
+.envelope.open .env-heart{opacity:0;animation:none}
+
+/* =========================================================
+   SKRIN 2: SURAT
+   ========================================================= */
+.letter{perspective:1400px}
+
+.paper-wrap{
+  position:relative;
+  width:min(580px,92vw);
+  animation:openPaper 1.2s ease both;
+  transform-origin:top center;
+}
+.paper-wrap::before{
+  content:"";
+  position:absolute;
+  top:-12px;
+  left:50%;
+  width:120px;
+  height:26px;
+  transform:translateX(-50%) rotate(-2deg);
+  background:rgba(255,143,199,.7);
+  border-radius:3px;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  z-index:2;
+  pointer-events:none;
+}
+
+.paper{
+  max-height:68vh;
+  overflow-y:auto;
+  padding:32px 38px 36px;
+  background-color:var(--cream);
+  background-image:repeating-linear-gradient(
+    transparent 0,transparent 31px,
+    rgba(214,51,132,.13) 31px,rgba(214,51,132,.13) 32px);
+  background-attachment:local;
+  border-radius:16px;
+  box-shadow:
+    0 22px 50px rgba(166,30,77,.25),
+    0 0 0 6px rgba(255,255,255,.6);
+  scrollbar-width:thin;
+  scrollbar-color:var(--pink) transparent;
+}
+
+.paper h2{
+  font-family:var(--font-script);
+  font-size:26px;
+  line-height:32px;
+  color:var(--pink-deep);
+  margin:0 0 32px;
+}
+.paper p{
+  font-size:15px;
+  line-height:32px;
+  margin:0 0 32px;
+  color:#6b3a52;
+}
+.paper p:last-child{margin-bottom:0}
+
+/* Butang continue: di luar kertas, muncul lepas ayat terakhir */
+.letter-actions{
+  text-align:center;
+  margin-top:22px;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.letter-actions.show{opacity:1;pointer-events:auto;transform:none}
+
+/* Ayat satu persatu: satu sahaja kelihatan pada satu masa */
+.paper{
+  min-height:240px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+}
+.paper .step{display:none;margin:0}
+.paper .step.show{display:block;animation:fadeUp .9s ease both}
+.paper .step.out{display:block;animation:fadeOut .6s ease forwards}
+.paper h2.step{margin:0}
+@keyframes fadeOut{
+  from{opacity:1;transform:none}
+  to{opacity:0;transform:translateY(-8px)}
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(10px);
+  animation:fadeUp .9s ease forwards;
+  animation-delay:calc(1s + var(--i,0) * 1.3s);
+}
+@keyframes fadeUp{
+  to{opacity:1;transform:none}
+}
+@keyframes openPaper{
+  from{transform:rotateX(-90deg);opacity:0}
+  to{transform:rotateX(0);opacity:1}
+}
+
+/* =========================================================
+   SKRIN 3: HARI JADI
+   ========================================================= */
+.birthday{
+  justify-content:flex-start;
+  overflow-y:auto;
+}
+.birthday-inner{
+  margin:auto;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  padding:60px 12px 110px;
+}
+
+/* Bunting */
+.bunting{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:46px;
+  display:flex;
+  justify-content:space-evenly;
+  align-items:flex-start;
+  pointer-events:none;
+  z-index:3;
+}
+.bunting::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:2px;
+  background:var(--pink-deep);
+  opacity:.45;
+}
+.bunting i{
+  display:block;
+  width:34px;
+  height:42px;
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top center;
+  animation:sway 3s ease-in-out infinite alternate;
+  animation-delay:var(--d,0s);
+}
+.bunting i:nth-child(4n+1){background:#ff8fc7}
+.bunting i:nth-child(4n+2){background:#ffd6e8}
+.bunting i:nth-child(4n+3){background:#c77dff}
+.bunting i:nth-child(4n+4){background:#ffe08a}
+@keyframes sway{
+  from{transform:rotate(-7deg)}
+  to{transform:rotate(7deg)}
+}
+
+/* Tajuk */
+.title{
+  font-family:var(--font-script);
+  font-weight:700;
+  font-size:clamp(20px,4.6vw,36px);
+  line-height:1.4;
+  text-align:center;
+  max-width:94vw;
+  background:linear-gradient(90deg,#d63384,#ff8fc7,#8e44ad,#d63384);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:var(--pink-deep);
+  -webkit-text-fill-color:transparent;
+  animation:shimmer 6s linear infinite;
+}
+@keyframes shimmer{
+  to{background-position:300% 0}
+}
+
+/* Kek */
+.cake-stage{
+  display:flex;
+  justify-content:center;
+}
+.cake-wrap{
+  position:relative;
+  width:300px;
+  height:290px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  outline:none;
+  animation:pop .9s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes pop{
+  from{transform:scale(.3) translateY(60px);opacity:0}
+  to{transform:none;opacity:1}
+}
+.cake-wrap::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-20px;
+  width:260px;
+  height:260px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(255,220,120,.55),transparent 65%);
+  pointer-events:none;
+  transition:opacity .6s ease;
+  animation:glow 1.4s ease-in-out infinite alternate;
+}
+@keyframes glow{
+  from{opacity:.7}
+  to{opacity:1}
+}
+
+.plate{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  width:334px;
+  height:28px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:linear-gradient(#f6f7f8,#a9b1b8);
+  box-shadow:0 16px 20px rgba(80,30,60,.28);
+}
+
+.tier{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:22px 22px 8px 8px;
+  background-color:#fad7a0;
+  background-image:
+    radial-gradient(circle,#ff8fc7 2px,transparent 2.6px),
+    radial-gradient(circle,#fff 2px,transparent 2.6px);
+  background-size:34px 26px,46px 30px;
+  background-position:0 0,14px 10px;
+  box-shadow:inset 0 -10px 14px rgba(147,81,22,.18);
+}
+.tier.bottom{width:270px;height:96px;bottom:14px}
+.tier.top{width:180px;height:72px;bottom:104px}
+
+.tier::before{ /* topi coklat */
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:28px;
+  background:var(--choc);
+  border-radius:22px 22px 0 0;
+  box-shadow:inset 0 8px rgba(255,255,255,.08);
+}
+.tier::after{ /* inti krim */
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:60%;
+  height:9px;
+  background:#935116;
+}
+.drip{
+  position:absolute;
+  left:0;
+  right:0;
+  top:22px;
+  height:24px;
+  background:
+    radial-gradient(ellipse 12px 22px at 50% 0,var(--choc) 96%,transparent 100%) 0 0/46px 100% repeat-x,
+    radial-gradient(ellipse 9px 14px at 50% 0,var(--choc) 96%,transparent 100%) 23px 0/46px 100% repeat-x;
+}
+.cake-heart{
+  position:absolute;
+  bottom:8px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:18px;
+}
+
+/* Lilin */
+.candles{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:174px;
+  display:flex;
+  justify-content:space-around;
+  padding:0 72px;
+}
+.candle{
+  position:relative;
+  width:11px;
+  height:46px;
+  border-radius:3px 3px 0 0;
+  background:repeating-linear-gradient(-45deg,#fff 0 6px,#ff8fc7 6px 12px);
+  box-shadow:0 0 0 1px rgba(0,0,0,.05);
+}
+.candle::before{ /* sumbu */
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-8px;
+  width:2px;
+  height:9px;
+  margin-left:-1px;
+  background:#333;
+}
+.candle::after{ /* asap */
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-14px;
+  width:9px;
+  height:9px;
+  margin-left:-4px;
+  border-radius:50%;
+  background:rgba(150,150,150,.55);
+  opacity:0;
+}
+.flame{
+  position:absolute;
+  left:50%;
+  bottom:calc(100% + 6px);
+  width:14px;
+  height:26px;
+  margin-left:-7px;
+  border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:radial-gradient(circle at 50% 72%,#fff7b0 0,#ffd23f 40%,#ff8a1f 78%);
+  box-shadow:0 0 14px 4px rgba(255,200,80,.7);
+  transform:scale(1);
+  transform-origin:50% 100%;
+  animation:flicker .5s ease-in-out infinite alternate;
+}
+.candle:nth-child(2) .flame{animation-delay:.15s}
+.candle:nth-child(3) .flame{animation-delay:.3s}
+@keyframes flicker{
+  from{transform:scale(1,1) rotate(-2deg)}
+  to{transform:scale(1.12,.92) rotate(2deg)}
+}
+
+/* Lilin ditiup */
+.cake-wrap.out::before{opacity:0;animation:none}
+.cake-wrap.out .flame{
+  animation:none;
+  opacity:0;
+  transform:scale(0);
+  transition:opacity .35s ease,transform .35s ease;
+}
+.cake-wrap.out .candle::after{animation:smoke 1.8s ease-out forwards}
+@keyframes smoke{
+  0%{opacity:.6;transform:translateY(0) scale(.6)}
+  100%{opacity:0;transform:translateY(-46px) scale(2.4)}
+}
+
+/* Ucapan selepas tiup */
+.wish{
+  min-height:34px;
+  font-family:var(--font-script);
+  font-size:26px;
+  font-weight:700;
+  color:var(--pink-deep);
+  text-align:center;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.wish.show{opacity:1;transform:none}
+
+/* Quote */
+.quote{
+  max-width:min(520px,92vw);
+  padding:16px 24px;
+  border-radius:18px;
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+  box-shadow:0 10px 30px rgba(214,51,132,.15);
+  font-family:var(--font-script);
+  font-size:clamp(18px,3.4vw,22px);
+  line-height:1.5;
+  color:var(--pink-dark);
+  text-align:center;
+  animation:fadeUp 1s ease .8s both;
+}
+
+/* Butang ke bouquet: tetap di bawah tengah skrin */
+#bouquetBtn{display:none}
+#bouquetBtn.show{
+  display:block;
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  z-index:25;
+  animation:fadeUpBtn .8s ease both;
+}
+#bouquetBtn.show:hover{transform:translateX(-50%) scale(1.04)}
+#bouquetBtn.show:active{transform:translateX(-50%) scale(.97)}
+@keyframes fadeUpBtn{
+  from{opacity:0;transform:translate(-50%,12px)}
+  to{opacity:1;transform:translate(-50%,0)}
+}
+
+/* ASCII art (hanya skrin lebar) */
+.art{
+  display:none;
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  pointer-events:none;
+  color:var(--plum);
+  opacity:.8;
+  z-index:1;
+}
+.art pre{
+  margin:0;
+  white-space:pre;
+  line-height:1;
+  font-family:'DejaVu Sans Mono','Segoe UI Symbol','Apple Braille',monospace;
+}
+.art-left{left:1.5vw}
+.art-left pre{font-size:min(10px,.72vw)}
+.art-right{right:1.5vw;text-align:center}
+.art-right pre{font-size:min(8px,.58vw)}
+.art .date{
+  margin:8px 0 0;
+  font-family:var(--font-script);
+  font-size:22px;
+  color:var(--pink-deep);
+}
+@media (min-width:1000px){
+  .art{display:block}
+}
+
+/* =========================================================
+   SKRIN 4: BOUQUET
+   ========================================================= */
+.bouquet-screen{
+  background:radial-gradient(ellipse at 50% 30%,#1a1030 0%,#07050f 70%);
+  z-index:20;
+}
+#stage{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+}
+#replay{
+  position:fixed;
+  left:14px;
+  bottom:14px;
+  font:12px "Courier New",monospace;
+  color:#ffb3d1;
+  background:transparent;
+  border:1px solid #ffb3d155;
+  border-radius:999px;
+  padding:6px 12px;
+  cursor:pointer;
+  opacity:.55;
+  transition:opacity .2s,background .2s;
+  z-index:5;
+}
+#replay:hover{opacity:1;background:#ffb3d122}
+
+/* Butang muzik */
+.music-btn{
+  position:fixed;
+  right:16px;
+  bottom:16px;
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:50%;
+  display:none;
+  place-items:center;
+  font-size:20px;
+  cursor:pointer;
+  background:rgba(255,255,255,.85);
+  box-shadow:0 6px 16px rgba(214,51,132,.3);
+  z-index:30;
+}
+.music-btn.show{display:grid}
+
+/* ---------- Responsif ---------- */
+@media (max-width:480px){
+  .paper{padding:28px 22px 30px}
+  .paper h2{font-size:22px}
+  .envelope{width:210px;height:140px}
+}
+@media (max-width:480px),(max-height:700px){
+  .cake-stage{transform:scale(.86);margin:-20px 0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important}
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- SKRIN 1: SAMPUL SURAT -->
+<section class="screen start-screen active" id="start">
+  <h1>💗 Open This Card 💗</h1>
+  <p class="sub">Tap the envelope</p>
+
+  <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Open the card">
+    <div class="env-back"></div>
+    <div class="env-letter"></div>
+    <div class="env-front"></div>
+    <div class="env-flap"></div>
+    <div class="env-heart">💗</div>
+  </div>
+
+  <button class="btn pulse" id="openBtn" type="button">OPEN 💌</button>
+</section>
+
+<!-- SKRIN 2: SURAT -->
+<section class="screen letter" id="letter">
+  <div class="paper-wrap">
+    <div class="paper" id="paper">
+      <h2 class="step">Happy Birthday Nurin Aleya Amani binti Mohd Ridzuan 🤍🎂</h2>
+      <p class="step">I still can’t believe we've been friends for 9 or 10 years now.</p>
+      <p class="step">Thank you for always being there for me and always having my back no matter what happens.</p>
+      <p class="step">I really appreciate everything you've done for me.</p>
+      <p class="step">Having you in my life feels like a blessing.</p>
+      <p class="step">Even though we only got really close recently, I feel like I've known you for much longer.</p>
+      <p class="step">I hope you will always be happy, surrounded by people who truly love and appreciate you.</p>
+      <p class="step">I hope next year brings you everything you wished for.</p>
+      <p class="step">Thank you for being my friend all these years.</p>
+      <p class="step">Happy birthday again, Nurin 🤍<br><br>Love you Nurin 🤍</p>
+    </div>
+    <div class="letter-actions" id="letterActions">
+      <button class="btn" id="continueBtn" type="button">CONTINUE ✨</button>
+    </div>
+  </div>
+</section>
+
+<!-- SKRIN 3: HARI JADI -->
+<section class="screen birthday" id="birthday">
+
+  <div class="bunting" id="bunting" aria-hidden="true"></div>
+
+  <div class="art art-left" aria-hidden="true">
+<pre><!-- TEMPEL ASCII ART TEDDY DI SINI --></pre>
+  </div>
+
+  <div class="art art-right" aria-hidden="true">
+<pre><!-- TEMPEL ASCII ART LILY DI SINI --></pre>
+    <div class="date">14/12/2012</div>
+  </div>
+
+  <div class="birthday-inner">
+
+    <div class="title">
+      ·:*¨༺ ♱ 𝓱𝓪𝓹𝓹𝔂 ✮ 𝓫𝓲𝓻𝓽𝓱𝓭𝓪𝔂 ✮ 𝓝𝓾𝓻𝓲𝓷 ✮ 𝓐𝓵𝓮𝔂𝓪 ✮ 𝓐𝓶𝓪𝓷𝓲 ♱ ༻¨*:·
+    </div>
+
+    <div class="cake-stage">
+      <div class="cake-wrap" id="cake" role="button" tabindex="0" aria-label="Blow out the candles">
+        <div class="plate"></div>
+        <div class="tier bottom"><div class="drip"></div><span class="cake-heart">💗</span></div>
+        <div class="tier top"><div class="drip"></div></div>
+        <div class="candles" id="candles">
+          <div class="candle"><div class="flame"></div></div>
+          <div class="candle"><div class="flame"></div></div>
+          <div class="candle"><div class="flame"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wish" id="wish">🎉 May all your wishes come true, Nurin 🎉</div>
+
+    <button class="btn ghost" id="blowBtn" type="button">🕯️ Make a wish &amp; blow the candles</button>
+
+    <div class="quote">
+      ✨ Semoga Nurin dilimpah rezeki,
+      dipermudahkan segala urusan,
+      sentiasa bahagia dan berjaya selalu 🤍✨
+    </div>
+
+  </div>
+
+  <!-- Butang bouquet (muncul 1 saat lepas tiup lilin) -->
+  <button class="btn" id="bouquetBtn" type="button">💐 One more thing...</button>
+</section>
+
+<!-- SKRIN 4: BOUQUET -->
+<section class="screen bouquet-screen" id="bouquet">
+  <canvas id="stage"></canvas>
+  <button id="replay" type="button" title="Main semula">&#8635; replay</button>
+</section>
+
+<button class="music-btn" id="musicBtn" type="button" aria-label="Toggle music">🔊</button>
+
+<audio id="letterMusic" loop preload="auto"><source src="letter.mp3" type="audio/mpeg"></audio>
+<audio id="bgMusic" loop preload="auto"><source src="music.mp3" type="audio/mpeg"></audio>
+
+<script>
+/* =========================================================
+   BAHAGIAN 1: BOUQUET LILY (canvas ASCII 3D)
+   Didedahkan sebagai window.startBouquet()
+   ========================================================= */
+(function () {
+  "use strict";
+
+  // ============ TETAPAN (ubah di sini) ============
+  var CONFIG = {
+    message: "For Nurin <3",
+    // Lily: putih, merah, pink. "accent" = warna alur tengah kelopak
+    lilies: [
+      { color: "#ffffff", accent: "#ffc2d6" },   // putih
+      { color: "#ffffff", accent: "#ffc2d6" },   // putih (lebih banyak)
+      { color: "#ff3b4e", accent: "#ff9aa5" },   // merah
+      { color: "#ff9ec4", accent: "#ff4f8b" },   // pink
+      { color: "#ff6fa5", accent: "#ffd1e3" }    // pink tua
+    ],
+    stamen: "#ffb347",
+    leaf: ["#3fa34d", "#6bcf6b", "#2f7d3a"],
+    wrap: ["#e8b4a0", "#f4cdbd", "#d98f7a"],
+    flowers: 11,
+    rotateSpeed: 0.5,   // putaran bouquet (radian/saat). 0 = berhenti
+    petalSpin: 0.6,     // kelajuan kelopak berpusing
+    seed: 7
+  };
+  // ================================================
+
+  var canvas = document.getElementById("stage");
+  var ctx = canvas.getContext("2d");
+  var COLS = 72, ROWS = 46;
+  var wrapTopY = 28;
+  var CX = COLS / 2;
+  var W = 0, H = 0, dpr = 1, font = 12, cw = 7, chh = 13;
+
+  function mulberry(a) {
+    return function () {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var rnd = mulberry(CONFIG.seed);
+  function pick(arr) { return arr[Math.floor(rnd() * arr.length)]; }
+
+  var glyphs = [];
+  var floaters = [];
+  var stars = [];
+  var flowers = [];
+  var t0 = performance.now();
+  var running = false;
+
+  function buildBouquet() {
+    glyphs = [];
+    flowers = [];
+    var wrapTop = 25, wrapBot = 35;
+
+    var tries = 0;
+    while (flowers.length < CONFIG.flowers && tries++ < 800) {
+      var x = (rnd() - 0.5) * 44;
+      var z = (rnd() - 0.5) * 44;
+      var y = 4 + rnd() * 17;
+      var r = 3.0 + rnd() * 1.3;           // lily lebih besar
+      if (Math.hypot(x / 21, (y - 13) / 9.5, z / 21) > 1) continue;
+      var tooClose = flowers.some(function (o) {
+        return Math.hypot((o.x - x) / 2, o.y - y, (o.z - z) / 2) < (o.r + r) * 0.85;
+      });
+      if (tooClose) continue;
+
+      var cells = [];
+      for (var gy = -Math.ceil(r) - 1; gy <= r + 1; gy++) {
+        for (var gx = -Math.ceil(r * 2.2); gx <= r * 2.2; gx++) {
+          var dx = gx / 2;
+          cells.push({ gx: gx, gy: gy, dist: Math.hypot(dx, gy), ang: Math.atan2(gy, dx) });
+        }
+      }
+      var kind = pick(CONFIG.lilies);
+      flowers.push({
+        x: x, y: y, z: z, r: r, cells: cells,
+        color: kind.color,
+        accent: kind.accent,
+        petals: 6,                          // lily = 6 kelopak
+        dir: rnd() < 0.5 ? -1 : 1,
+        speed: 0.7 + rnd() * 0.8,
+        delay: 0.9 + flowers.length * 0.12
+      });
+    }
+
+    // batang + daun
+    flowers.forEach(function (f) {
+      var steps = 22;
+      for (var s = 0; s <= steps; s++) {
+        var k = s / steps;
+        var yy = f.y + f.r * 0.7 + (wrapTop + 3 - f.y - f.r * 0.7) * k;
+        var px = f.x * (1 - k), pz = f.z * (1 - k);
+        glyphs.push({ kind: "stem", f: f, x: px, y: yy, z: pz, color: CONFIG.leaf[0], delay: 0.4 + (1 - k) * 0.6 });
+        if (s % 7 === 3) {
+          for (var l = 1; l <= 3; l++) {
+            glyphs.push({
+              kind: "leaf", ch: l === 3 ? "}" : "~",
+              x: px + l * (s % 2 ? 1 : -1), y: yy - l * 0.3, z: pz,
+              color: pick(CONFIG.leaf), delay: 0.8
+            });
+          }
+        }
+      }
+    });
+
+    // pembalut (kon)
+    for (var wy = wrapTop; wy <= wrapBot; wy++) {
+      var kk = (wy - wrapTop) / (wrapBot - wrapTop);
+      var rad = 16 * (1 - kk) + 1;
+      var n = Math.ceil(rad * 3.6);
+      for (var i = 0; i < n; i++) {
+        var th = (i / n) * Math.PI * 2;
+        var rib = wy === wrapTop + 3;
+        var ch = rib ? "=" : (i + wy) % 4 === 0 ? "v" : (i + wy) % 4 === 2 ? "^" : "\u00b7";
+        glyphs.push({
+          kind: "wrap", ch: ch,
+          x: Math.cos(th) * rad, y: wy, z: Math.sin(th) * rad,
+          color: rib ? "#ff6fa5" : pick(CONFIG.wrap), delay: 1.6 + kk * 0.4
+        });
+      }
+    }
+    // pita di depan
+    "(\\ /)".split("").forEach(function (c, i) {
+      glyphs.push({ kind: "bow", ch: c, x: -2 + i, y: wrapTop + 4, z: 0, color: "#ff6fa5", delay: 2.1 });
+    });
+  }
+
+  function buildStars() {
+    stars = [];
+    for (var i = 0; i < 70; i++) {
+      stars.push({ x: rnd() * COLS, y: rnd() * ROWS, p: rnd() * 6.28, ch: pick([".", "\u00b7", "+", "*"]) });
+    }
+  }
+
+  function spawnFloater(initial) {
+    var kinds = [
+      { ch: "<3", c: "#ff6fa5" },
+      { ch: "\u2665", c: "#ff9ec4" },
+      { ch: "*", c: "#ffd166" },
+      { ch: "+", c: "#7bdff2" },
+      { ch: ".", c: "#ffffff" },
+      { ch: "(\u2661)", c: "#b79ced" }
+    ];
+    var k = pick(kinds);
+    floaters.push({
+      ch: k.ch, c: k.c,
+      x: rnd() * COLS,
+      y: initial ? rnd() * ROWS : ROWS + 2,
+      vy: 1.2 + rnd() * 2.2,
+      drift: (rnd() - 0.5) * 2,
+      ph: rnd() * 6.28
+    });
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    font = Math.max(6, Math.min(W / (COLS * 0.6), H / (ROWS * 1.12)));
+    ctx.font = font + 'px "Courier New", monospace';
+    cw = ctx.measureText("M").width;
+    chh = font * 1.12;
+  }
+
+  function drawCat(t, ox, oy) {
+    var blink = Math.sin(t * 1.3) > 0.97;
+    var eye = blink ? "-" : "o";
+    var lines = [
+      " /\\_/\\ ",
+      "( " + eye + "." + eye + " )",
+      " > ^ < ",
+      "/(   )\\",
+      " U\u201d U\u201d "
+    ];
+    ctx.fillStyle = "#f5f0ff";
+    lines.forEach(function (ln, i) {
+      for (var j = 0; j < ln.length; j++) {
+        if (ln[j] !== " ") ctx.fillText(ln[j], ox + j * cw, oy + i * chh);
+      }
+    });
+    var beat = 1 + 0.25 * Math.max(0, Math.sin(t * 5));
+    ctx.fillStyle = "#ff6fa5";
+    ctx.font = (font * beat) + 'px "Courier New", monospace';
+    ctx.fillText("<3", ox + 2.5 * cw, oy + 3 * chh);
+    ctx.font = font + 'px "Courier New", monospace';
+  }
+
+  function frame(now) {
+    var t = (now - t0) / 1000;
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = font + 'px "Courier New", monospace';
+    var gx = (W - COLS * cw) / 2;
+    var gy = (H - ROWS * chh) / 2 + chh;
+    ctx.textBaseline = "alphabetic";
+
+    // bintang
+    stars.forEach(function (s) {
+      ctx.globalAlpha = 0.25 + 0.5 * Math.abs(Math.sin(t * 0.8 + s.p));
+      ctx.fillStyle = "#cdbfff";
+      ctx.fillText(s.ch, gx + s.x * cw, gy + s.y * chh);
+    });
+
+    // bouquet 3D berputar
+    var phi = t * CONFIG.rotateSpeed;
+    var cs = Math.cos(phi), sn = Math.sin(phi);
+    var R = 24;
+    var items = [];
+    function proj(x, z) { return [x * cs + z * sn, -x * sn + z * cs]; }
+    function shade(zr) { return 0.5 + 0.5 * (zr + R) / (2 * R); }
+
+    glyphs.forEach(function (g) {
+      var a = Math.min(1, Math.max(0, (t - g.delay * 0.9) * 3));
+      if (a <= 0) return;
+      var p = g.kind === "bow" ? [g.x, 30] : proj(g.x, g.z);
+      var xr = p[0], zr = p[1];
+      var ch = g.ch;
+      if (g.kind === "stem") {
+        var fx = proj(g.f.x, g.f.z)[0];
+        var slope = fx / (wrapTopY - g.f.y);
+        ch = Math.abs(slope) < 0.22 ? "|" : fx > 0 ? "/" : "\\";
+      }
+      var sway = Math.sin(t * 1.1 + g.y * 0.08) * 0.3 * ((ROWS - g.y) / ROWS);
+      items.push({ ch: ch, x: xr + sway, y: g.y - (1 - a) * 2, z: zr, c: g.color, a: a * (g.kind === "bow" ? 1 : shade(zr)) });
+    });
+
+    // ---- BUNGA LILY ----
+    flowers.forEach(function (f) {
+      var a = Math.min(1, Math.max(0, (t - f.delay * 0.9) * 3));
+      if (a <= 0) return;
+      var p = proj(f.x, f.z);
+      var fx = p[0], fz = p[1];
+      var spin = t * CONFIG.petalSpin * f.speed * f.dir;
+      var grow = Math.min(1, a * 1.2);
+      var sway = Math.sin(t * 1.1 + f.y * 0.08) * 0.3 * ((ROWS - f.y) / ROWS);
+      f.cells.forEach(function (c) {
+        // 6 kelopak lily yang runcing
+        var lobe = Math.pow(Math.abs(Math.cos((f.petals / 2) * (c.ang - spin))), 1.8);
+        var edge = f.r * grow * (0.28 + 0.72 * lobe);
+        if (c.dist > edge) return;
+        var ch, col;
+        if (c.dist < 0.9) {                       // stamen di tengah
+          ch = "*"; col = CONFIG.stamen;
+        } else if (c.dist < f.r * 0.5 * grow) {   // alur tengah kelopak
+          ch = "O"; col = f.accent;
+        } else if (c.dist < edge * 0.8) {
+          ch = "o"; col = f.color;
+        } else {                                  // hujung kelopak runcing
+          ch = "*"; col = f.color;
+        }
+        items.push({
+          ch: ch, x: fx + c.gx + sway, y: f.y + c.gy, z: fz + 0.5,
+          c: col, a: a * shade(fz)
+        });
+      });
+      // filamen stamen yang terjulur keluar
+      [-1, 0, 1].forEach(function (d) {
+        items.push({
+          ch: d === 0 ? "|" : (d < 0 ? "\\" : "/"),
+          x: fx + d * 1.6 + sway, y: f.y - 1.6 * grow, z: fz + 0.6,
+          c: CONFIG.stamen, a: a * shade(fz)
+        });
+      });
+    });
+
+    items.sort(function (p, q) { return p.z - q.z; });
+    items.forEach(function (it) {
+      ctx.globalAlpha = it.a;
+      ctx.fillStyle = it.c;
+      ctx.fillText(it.ch, gx + (CX + it.x) * cw, gy + it.y * chh);
+    });
+    ctx.globalAlpha = 1;
+
+    // kucing
+    ctx.globalAlpha = Math.min(1, Math.max(0, (t - 2.4) * 2));
+    drawCat(t, gx + (CX - 3.5) * cw, gy + 36 * chh);
+
+    // mesej ditaip
+    var shown = Math.floor(Math.max(0, t - 3.2) * 14);
+    var msg = CONFIG.message.slice(0, shown);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "#ffd6e7";
+    var mw = ctx.measureText(CONFIG.message).width;
+    ctx.fillText(
+      msg + (Math.floor(t * 2) % 2 && shown < CONFIG.message.length + 20 ? "_" : ""),
+      gx + (COLS * cw - mw) / 2, gy + 43 * chh
+    );
+
+    // zarah terapung
+    if (t > 1.5 && floaters.length < 55 && rnd() < 0.18) spawnFloater(false);
+    for (var i = floaters.length - 1; i >= 0; i--) {
+      var f = floaters[i];
+      f.y -= f.vy * 0.016;
+      f.x += Math.sin(t * 1.5 + f.ph) * 0.03 + f.drift * 0.004;
+      if (f.y < -2) { floaters.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.min(1, f.y / 6, (ROWS - f.y) / 4 + 0.3) * 0.9;
+      ctx.fillStyle = f.c;
+      ctx.fillText(f.ch, gx + f.x * cw, gy + f.y * chh);
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(frame);
+  }
+
+  function start() {
+    rnd = mulberry(CONFIG.seed);
+    resize();
+    buildBouquet();
+    buildStars();
+    floaters = [];
+    for (var i = 0; i < 12; i++) spawnFloater(true);
+    t0 = performance.now();
+  }
+
+  window.addEventListener("resize", resize);
+  document.getElementById("replay").addEventListener("click", function () {
+    t0 = performance.now();
+  });
+
+  window.startBouquet = function () {
+    start();
+    if (!running) { running = true; requestAnimationFrame(frame); }
+  };
+})();
+
+
+/* =========================================================
+   BAHAGIAN 2: KAD (sampul -> surat -> kek -> bouquet)
+   ========================================================= */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var letterSong = $("letterMusic");
+  var birthdaySong = $("bgMusic");
+  var muted = false;
+
+  function safePlay(a) {
+    try { var p = a.play(); if (p && p.catch) { p.catch(function () {}); } } catch (e) {}
+  }
+
+  function show(id) {
+    var screens = document.querySelectorAll(".screen");
+    for (var i = 0; i < screens.length; i++) { screens[i].classList.remove("active"); }
+    $(id).classList.add("active");
+  }
+
+  /* Hati terapung di latar */
+  (function () {
+    var box = $("bgHearts");
+    var icons = ["💗", "💖", "💕", "🤍", "✨", "🧸", "🌸"];
+    function spawn() {
+      var s = document.createElement("span");
+      s.textContent = icons[Math.floor(Math.random() * icons.length)];
+      s.style.left = (Math.random() * 96) + "%";
+      s.style.fontSize = (16 + Math.random() * 26) + "px";
+      var dur = 7 + Math.random() * 7;
+      s.style.animationDuration = dur + "s";
+      box.appendChild(s);
+      setTimeout(function () { s.remove(); }, dur * 1000 + 200);
+    }
+    for (var i = 0; i < 8; i++) { setTimeout(spawn, i * 350); }
+    setInterval(function () { if (!document.hidden) { spawn(); } }, 900);
+  })();
+
+  /* Bunting */
+  (function () {
+    var b = $("bunting");
+    var n = Math.max(8, Math.floor(window.innerWidth / 70));
+    for (var i = 0; i < n; i++) {
+      var f = document.createElement("i");
+      f.style.setProperty("--d", (i * 0.15 % 1.6) + "s");
+      b.appendChild(f);
+    }
+  })();
+
+  /* Confetti */
+  var cv = $("fx"), cx = cv.getContext("2d");
+  var W = 0, H = 0, parts = [], raf = null;
+  var colors = ["#ff8fc7", "#ffd6e8", "#c77dff", "#ffe08a", "#ff5fa8", "#ffffff"];
+
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  function burst(n, x, y) {
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, s = 4 + Math.random() * 9;
+      parts.push({
+        x: x, y: y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 6, g: .24,
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
+        r: Math.random() * 6, vr: (Math.random() - .5) * .4,
+        c: colors[i % colors.length], round: Math.random() < .25,
+        life: 130 + Math.random() * 90
+      });
+    }
+    if (!raf) { loop(); }
+  }
+
+  function rain(n) {
+    for (var i = 0; i < n; i++) {
+      parts.push({
+        x: Math.random() * W, y: -20 - Math.random() * H * 0.4,
+        vx: (Math.random() - .5) * 1.4, vy: 2 + Math.random() * 3, g: .01,
+        w: 6 + Math.random() * 6, h: 4 + Math.random() * 5,
+        r: Math.random() * 6, vr: (Math.random() - .5) * .25,
+        c: colors[i % colors.length], round: Math.random() < .25,
+        life: 260 + Math.random() * 120
+      });
+    }
+    if (!raf) { loop(); }
+  }
+
+  function loop() {
+    cx.clearRect(0, 0, W, H);
+    parts = parts.filter(function (p) { return p.life > 0 && p.y < H + 30; });
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i];
+      p.vx *= .992; p.vy += p.g;
+      p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life--;
+      cx.save();
+      cx.globalAlpha = Math.min(1, p.life / 40);
+      cx.translate(p.x, p.y);
+      cx.rotate(p.r);
+      cx.fillStyle = p.c;
+      if (p.round) { cx.beginPath(); cx.arc(0, 0, p.h / 2 + 1, 0, 6.3); cx.fill(); }
+      else { cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); }
+      cx.restore();
+    }
+    if (parts.length) { raf = requestAnimationFrame(loop); }
+    else { raf = null; cx.clearRect(0, 0, W, H); }
+  }
+
+  /* Surat: ayat keluar satu persatu */
+  function autoScrollLetter() {
+    var steps = document.querySelectorAll("#paper .step");
+    var idx = 0;
+    function next() {
+      if (idx > 0) { steps[idx - 1].classList.remove("show"); }
+      if (idx >= steps.length) { return; }
+      var el = steps[idx];
+      el.classList.add("show");
+      var hold = 1700 + el.textContent.length * 45;
+      idx++;
+      if (idx < steps.length) {
+        setTimeout(function () {
+          el.classList.add("out");
+          setTimeout(function () { el.classList.remove("out"); next(); }, 600);
+        }, hold);
+      } else {
+        // ayat terakhir kekal, butang Continue muncul
+        setTimeout(function () { $("letterActions").classList.add("show"); }, 1500);
+      }
+    }
+    setTimeout(next, 800);
+  }
+
+  /* Skrin 1 -> 2 */
+  var opened = false;
+  function openGift() {
+    if (opened) { return; }
+    opened = true;
+    $("openBtn").disabled = true;
+    $("envelope").classList.add("open");
+    safePlay(letterSong);
+    setTimeout(function () {
+      show("letter");
+      burst(40, W / 2, H / 2);
+      autoScrollLetter();
+    }, 1500);
+  }
+  $("openBtn").addEventListener("click", openGift);
+  $("envelope").addEventListener("click", openGift);
+  $("envelope").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openGift(); }
+  });
+
+  /* Skrin 2 -> 3 */
+  function showBirthday() {
+    show("birthday");
+    letterSong.pause();
+    try { letterSong.currentTime = 0; } catch (e) {}
+    safePlay(birthdaySong);
+    $("musicBtn").classList.add("show");
+    burst(90, W / 2, H * 0.4);
+    setTimeout(function () { rain(70); }, 500);
+  }
+  $("continueBtn").addEventListener("click", showBirthday);
+
+  /* Tiup lilin */
+  var blown = false;
+  function blow() {
+    if (blown) { return; }
+    blown = true;
+    $("cake").classList.add("out");
+    $("blowBtn").disabled = true;
+    $("blowBtn").textContent = "🎂 Your wish is on its way 💫";
+    $("wish").classList.add("show");
+    var r = $("cake").getBoundingClientRect();
+    burst(140, r.left + r.width / 2, r.top + 20);
+    setTimeout(function () { rain(120); }, 350);
+    setTimeout(function () { $("bouquetBtn").classList.add("show"); }, 1000); // tunggu 1 saat
+  }
+  $("blowBtn").addEventListener("click", blow);
+  $("cake").addEventListener("click", blow);
+  $("cake").addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); blow(); }
+  });
+
+  /* Skrin 3 -> 4 (bouquet) */
+  $("bouquetBtn").addEventListener("click", function () {
+    show("bouquet");
+    burst(60, W / 2, H / 2);
+    window.startBouquet();
+  });
+
+  /* Butang muzik */
+  $("musicBtn").addEventListener("click", function () {
+    muted = !muted;
+    letterSong.muted = muted;
+    birthdaySong.muted = muted;
+    this.textContent = muted ? "🔇" : "🔊";
+  });
+})();
+</script>
+
+</body>
+</html>
